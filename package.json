@@ -5,8 +5,12 @@
   "version": "0.1.0",
   "publisher": "colored-areas",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michaelsecar/colored-areas.git"
+  },
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.118.0"
   },
   "categories": [
     "Visualization",
