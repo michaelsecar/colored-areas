@@ -3,7 +3,7 @@
   "displayName": "Colored Areas",
   "description": "Colorize code regions defined by comments. Use //region: #color and //endregion markers.",
   "version": "0.1.0",
-  "publisher": "colored-areas",
+  "publisher": "michaelsecar",
   "license": "MIT",
   "repository": {
     "type": "git",
