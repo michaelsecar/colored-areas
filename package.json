@@ -1,0 +1,111 @@
+{
+  "name": "colored-areas",
+  "displayName": "Colored Areas",
+  "description": "Colorize code regions defined by comments. Use //region: #color and //endregion markers.",
+  "version": "0.1.0",
+  "publisher": "colored-areas",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Visualization",
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "coloredAreas.toggle",
+        "title": "Colored Areas: Toggle Highlighting"
+      }
+    ],
+    "configuration": {
+      "title": "Colored Areas",
+      "properties": {
+        "coloredAreas.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable colored area highlighting"
+        },
+        "coloredAreas.renderMode": {
+          "type": "string",
+          "enum": [
+            "full",
+            "background",
+            "gutter",
+            "border"
+          ],
+          "default": "full",
+          "description": "Rendering mode for colored areas:\n- full: background + left border\n- background: background color only\n- gutter: left border only (gutter style)\n- border: left border only"
+        },
+        "coloredAreas.opacity": {
+          "type": "number",
+          "default": 0.08,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Opacity for the background color (0.0 - 1.0)"
+        },
+        "coloredAreas.colors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "#FF6B6B",
+            "#4ECDC4",
+            "#45B7D1",
+            "#96CEB4",
+            "#FFEAA7",
+            "#DDA0DD",
+            "#98D8C8",
+            "#F7DC6F",
+            "#BB8FCE",
+            "#85C1E9"
+          ],
+          "description": "Color palette for cycling through nested regions"
+        },
+        "coloredAreas.languageOverrides": {
+          "type": "object",
+          "default": {},
+          "description": "Override comment syntax for specific languages",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "lineComment": {
+                "type": "string"
+              },
+              "blockCommentStart": {
+                "type": "string"
+              },
+              "blockCommentEnd": {
+                "type": "string"
+              },
+              "regionStart": {
+                "type": "string"
+              },
+              "regionEnd": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.40",
+    "@types/vscode": "^1.118.0",
+    "typescript": "^5.9.3"
+  }
+}
