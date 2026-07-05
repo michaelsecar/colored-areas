@@ -1,4 +1,4 @@
---region: #FF6B6B Database Schema
+--region Database Schema
 CREATE DATABASE shop;
 
 USE shop;

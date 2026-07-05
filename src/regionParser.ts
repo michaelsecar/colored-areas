@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import { ColoredAreaRegion, PatternSet } from './types';
 
+interface ColorResult {
+  hex: string;
+  alpha?: number;
+}
+
 const CSS_NAMED_COLORS: Record<string, string> = {
   aliceblue: '#f0f8ff', antiquewhite: '#faebd7', aqua: '#00ffff',
   aquamarine: '#7fffd4', azure: '#f0ffff', beige: '#f5f5dc',
@@ -54,28 +59,41 @@ const CSS_NAMED_COLORS: Record<string, string> = {
   yellowgreen: '#9acd32',
 };
 
-function parseColor(raw: string): string | null {
+function parseColor(raw: string): ColorResult | null {
   const s = raw.trim();
 
-  if (/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(s) ||
-      /^#[0-9a-fA-F]{4}([0-9a-fA-F]{4})?$/.test(s)) {
-    return s.toLowerCase();
-  }
-
-  if (/^[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(s) ||
-      /^[0-9a-fA-F]{4}([0-9a-fA-F]{4})?$/.test(s)) {
-    return '#' + s.toLowerCase();
+  const hexMatch = /^#?([0-9a-fA-F]{3,8})$/.exec(s);
+  if (hexMatch) {
+    const digits = hexMatch[1];
+    const len = digits.length;
+    if (len === 3 || len === 6 || len === 4 || len === 8) {
+      let hex: string;
+      let alpha: number | undefined;
+      if (s.startsWith('#')) {
+        hex = s.toLowerCase();
+      } else {
+        hex = '#' + s.toLowerCase();
+      }
+      if (len === 4) {
+        const a = parseInt(digits[3] + digits[3], 16) / 255;
+        alpha = Math.round(a * 100) / 100;
+      } else if (len === 8) {
+        const a = parseInt(digits.slice(6, 8), 16) / 255;
+        alpha = Math.round(a * 100) / 100;
+      }
+      return { hex, alpha };
+    }
   }
 
   const lower = s.toLowerCase();
   if (CSS_NAMED_COLORS[lower]) {
-    return CSS_NAMED_COLORS[lower];
+    return { hex: CSS_NAMED_COLORS[lower] };
   }
 
   return null;
 }
 
-function extractColorAndLabel(rest: string): { color: string | null; label: string } {
+function extractColorAndLabel(rest: string): { color: ColorResult | null; label: string } {
   const trimmed = rest.trim();
   if (!trimmed) {
     return { color: null, label: '' };
@@ -101,6 +119,7 @@ interface StackFrame {
   color: string;
   label: string;
   colorSource: 'inline' | 'palette';
+  alpha?: number;
 }
 
 export function parseRegions(
@@ -125,6 +144,7 @@ export function parseRegions(
           label: frame.label,
           level: frame.level,
           colorSource: frame.colorSource,
+          alpha: frame.alpha,
         });
       }
       continue;
@@ -133,9 +153,22 @@ export function parseRegions(
     const startMatch = line.match(patterns.startPattern);
     if (startMatch) {
       const level = stack.length;
-      const rest = startMatch[1] || '';
-      const { color: inlineColor, label } = extractColorAndLabel(rest);
-      const color = inlineColor || paletteColors[level % paletteColors.length];
+      const hasColon = startMatch[1] !== undefined;
+      const rest = hasColon ? (startMatch[1] || '') : (startMatch[2] || '');
+
+      let inlineColor: ColorResult | null = null;
+      let label = '';
+
+      if (hasColon) {
+        const result = extractColorAndLabel(rest);
+        inlineColor = result.color;
+        label = result.label;
+      } else {
+        label = rest.trim();
+      }
+
+      const color = inlineColor ? inlineColor.hex : paletteColors[level % paletteColors.length];
+      const alpha = inlineColor?.alpha;
 
       stack.push({
         startLine: lineIdx,
@@ -143,6 +176,7 @@ export function parseRegions(
         color,
         label,
         colorSource: inlineColor ? 'inline' : 'palette',
+        alpha,
       });
     }
   }
@@ -156,6 +190,7 @@ export function parseRegions(
       label: frame.label,
       level: frame.level,
       colorSource: frame.colorSource,
+      alpha: frame.alpha,
     });
   }
 

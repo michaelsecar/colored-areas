@@ -5,6 +5,7 @@ export interface ColoredAreaRegion {
   label: string;
   level: number;
   colorSource: 'inline' | 'palette';
+  alpha?: number;
 }
 
 export interface CommentStyle {

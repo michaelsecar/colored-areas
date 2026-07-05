@@ -71,18 +71,18 @@ export function buildPatterns(
   commentStyle: CommentStyle,
   overrides?: LanguageOverride
 ): PatternSet | null {
-  const startMarker = overrides?.regionStart || 'region:';
+  const startMarker = overrides?.regionStart || 'region';
   const endMarker = overrides?.regionEnd || 'endregion';
 
   if (commentStyle.lineComment) {
     const esc = escapeRegex(commentStyle.lineComment.trim());
     return {
       startPattern: new RegExp(
-        `^\\s*${esc}\\s*${escapeRegex(startMarker)}\\s*(.*)$`,
+        `^\\s*${esc}\\s*\\b${escapeRegex(startMarker)}(?::\\s*(.*)|\\s+(.*))?\\s*$`,
         'i'
       ),
       endPattern: new RegExp(
-        `^\\s*${esc}\\s*${escapeRegex(endMarker)}\\s*$`,
+        `^\\s*${esc}\\s*\\b${escapeRegex(endMarker)}\\s*$`,
         'i'
       ),
     };
@@ -93,11 +93,11 @@ export function buildPatterns(
     const escEnd = escapeRegex(commentStyle.blockCommentEnd.trim());
     return {
       startPattern: new RegExp(
-        `^\\s*${escStart}\\s*${escapeRegex(startMarker)}\\s*(.*?)\\s*${escEnd}\\s*$`,
+        `^\\s*${escStart}\\s*\\b${escapeRegex(startMarker)}(?::\\s*(.*?)\\s*${escEnd}|\\s+(.*?)\\s*${escEnd}|\\s*${escEnd})\\s*$`,
         'i'
       ),
       endPattern: new RegExp(
-        `^\\s*${escStart}\\s*${escapeRegex(endMarker)}\\s*${escEnd}\\s*$`,
+        `^\\s*${escStart}\\s*\\b${escapeRegex(endMarker)}\\s*${escEnd}\\s*$`,
         'i'
       ),
     };

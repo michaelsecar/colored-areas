@@ -54,7 +54,10 @@ class ColoredAreasColorProvider implements vscode.DocumentColorProvider {
       const h = Math.round(n * 255).toString(16);
       return h.length === 1 ? '0' + h : h;
     };
-    const hex = `#${toHex(color.red)}${toHex(color.green)}${toHex(color.blue)}`;
+    let hex = `#${toHex(color.red)}${toHex(color.green)}${toHex(color.blue)}`;
+    if (color.alpha < 1) {
+      hex += toHex(color.alpha);
+    }
     return [new vscode.ColorPresentation(hex)];
   }
 

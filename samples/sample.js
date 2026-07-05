@@ -1,4 +1,4 @@
-//region: #FF6B6B Database Module
+//region Database Module
 function connect() {
   //region: #4ECDC4 Connection Pool
   class Pool {

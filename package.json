@@ -1,8 +1,8 @@
 {
   "name": "colored-areas",
   "displayName": "Colored Areas",
-  "description": "Colorize code regions defined by comments. Use //region: #color and //endregion markers.",
-  "version": "0.1.0",
+  "description": "Colorize code regions defined by comments. Use //region and //endregion markers. Optionally specify a color with //region:#color.",
+  "version": "0.2.0",
   "publisher": "michaelsecar",
   "license": "MIT",
   "repository": {
@@ -48,10 +48,10 @@
         },
         "coloredAreas.opacity": {
           "type": "number",
-          "default": 0.08,
+          "default": 0.2,
           "minimum": 0,
           "maximum": 1,
-          "description": "Opacity for the background color (0.0 - 1.0)"
+          "description": "Default opacity for the background color (0.0 - 1.0). Can be overridden per region via the alpha channel in the inline color (e.g., region:#ff000080)"
         },
         "coloredAreas.colors": {
           "type": "array",

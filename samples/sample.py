@@ -1,4 +1,4 @@
-#region: #FF6B6B User Service
+#region User Service
 import json
 from datetime import datetime
 
@@ -25,7 +25,7 @@ class UserValidator:
         return 0 < age < 150
 #endregion
 
-#region: #F7DC6F API Endpoints
+#region API Endpoints
 @app.route("/api/users")
 def get_users():
     repo = UserRepository()

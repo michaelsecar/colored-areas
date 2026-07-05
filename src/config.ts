@@ -11,7 +11,7 @@ export function loadConfig(): ColoredAreasConfig {
 
   const enabled = config.get<boolean>('enabled', true);
   const renderMode = config.get<RenderMode>('renderMode', 'full');
-  const rawOpacity = config.get<number>('opacity', 0.08);
+  const rawOpacity = config.get<number>('opacity', 0.2);
   const opacity = Math.max(0, Math.min(1, rawOpacity));
   const colors = config.get<string[]>('colors', DEFAULT_COLORS);
   const languageOverrides = config.get<Record<string, LanguageOverride>>('languageOverrides', {});
