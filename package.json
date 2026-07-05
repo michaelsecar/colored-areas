@@ -48,7 +48,7 @@
         },
         "coloredAreas.opacity": {
           "type": "number",
-          "default": 0.2,
+          "default": 0.1,
           "minimum": 0,
           "maximum": 1,
           "description": "Default opacity for the background color (0.0 - 1.0). Can be overridden per region via the alpha channel in the inline color (e.g., region:#ff000080)"
